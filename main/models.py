@@ -79,7 +79,7 @@ class Query(models.Model):
     author = models.ForeignKey(IMUser, on_delete=models.CASCADE, related_name='authored_queries')
 
     def __str__(self):
-        return self.title
+        return f"{self.title} (Submitted by: {self.submitted_by.email})"
 
 class QueryComment(models.Model):
     query = models.ForeignKey(Query, on_delete=models.CASCADE, related_name='comments')
