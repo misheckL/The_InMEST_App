@@ -19,12 +19,17 @@ class Course(models.Model):
         return f"{self.name}"
     
 class ClassSchedule(models.Model):
+    REPEAT_FREQUENCIES = (
+        ('DAILY', 'Daily'),
+        ('WEEKLY', 'Weekly'),
+        ('MONTHLY', 'Monthly'),
+    )
     title = models.CharField(max_length=255)
     description = models.TextField()
     start_date_and_time = models.DateTimeField()
     end_date_and_time = models.DateTimeField()
     is_repeated = models.BooleanField(default=False)
-    repeat_frequency = models.IntegerField(null=True, blank=True)
+    repeat_frequency = models.CharField(max_length=25, choices=REPEAT_FREQUENCIES, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     organizer = models.ForeignKey(IMUser, on_delete=models.CASCADE, related_name='organized_classes')
     cohort = models.ForeignKey(Cohort, on_delete=models.CASCADE, related_name='class_schedules')
