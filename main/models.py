@@ -2,12 +2,12 @@ from django.db import models
 from .models import * 
 from django.contrib import admin
 from django.db.models import TextChoices
-from users.models import IMUser  # Import the IMUser model
-from users.models import Cohort  # Import the Cohort model
+from users.models import IMUser
+from users.models import Cohort
 
 
 
-# Create your models here.
+# Here are the models
 
 class Course(models.Model):
     name = models.CharField(max_length=2000)
@@ -24,7 +24,7 @@ class ClassSchedule(models.Model):
     start_date_and_time = models.DateTimeField()
     end_date_and_time = models.DateTimeField()
     is_repeated = models.BooleanField(default=False)
-    repeat_frequency = models.IntegerField(null=True, blank=True)  # Define appropriate choices if needed
+    repeat_frequency = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     organizer = models.ForeignKey(IMUser, on_delete=models.CASCADE, related_name='organized_classes')
     cohort = models.ForeignKey(Cohort, on_delete=models.CASCADE, related_name='class_schedules')
@@ -34,8 +34,8 @@ class ClassSchedule(models.Model):
         return self.title
 
 from django.db import models
-from users.models import IMUser  # Import the IMUser model
-from .models import ClassSchedule  # Import the ClassSchedule model
+from users.models import IMUser
+from .models import ClassSchedule
 
 class ClassAttendance(models.Model):
     class_schedule = models.ForeignKey(ClassSchedule, on_delete=models.CASCADE, related_name='attendances')
@@ -49,7 +49,7 @@ class ClassAttendance(models.Model):
         return f"{self.attendee} - {self.class_schedule}"
 
 from django.db import models
-from users.models import IMUser  # Import the IMUser model
+from users.models import IMUser
 
 class Query(models.Model):
     PENDING = 'PENDING'

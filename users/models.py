@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-# Define the IMUser model
 class IMUser(models.Model):
     FIRST_NAME = models.CharField(max_length=50)
     LAST_NAME = models.CharField(max_length=50)
@@ -18,7 +17,6 @@ class IMUser(models.Model):
     def __str__(self):
         return f"{self.FIRST_NAME} {self.LAST_NAME}"
 
-# Define the Cohort model
 class Cohort(models.Model):
     NAME = models.CharField(max_length=100)
     DESCRIPTION = models.TextField()
@@ -33,7 +31,6 @@ class Cohort(models.Model):
     def __str__(self):
         return self.NAME
 
-# Define the CohortMember model
 class CohortMember(models.Model):
     COHORT = models.ForeignKey(Cohort, on_delete=models.CASCADE)
     MEMBER = models.ForeignKey(IMUser, on_delete=models.CASCADE, related_name='cohort_members')
