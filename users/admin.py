@@ -1,15 +1,24 @@
 from django.contrib import admin
 from .models import *
-from .models import IMUser, Cohort, CohortMember
 
-@admin.register(IMUser)
-class IMUserAdmin(admin.ModelAdmin):
-    list_display = ['FIRST_NAME', 'LAST_NAME', 'IS_ACTIVE', 'USER_TYPE', 'DATE_CREATED']
+# Register your models here.
 
-@admin.register(Cohort)
+class UserAdmin(admin.ModelAdmin):
+    list_display=("first_name", "last_name", "is_active", "user_type", "date_created")
+    
+# class UserTypeAdmin(admin.ModelAdmin):
+#     list_display=("name",)
+    
 class CohortAdmin(admin.ModelAdmin):
-    list_display = ['NAME', 'YEAR', 'START_DATE', 'END_DATE', 'IS_ACTIVE', 'AUTHOR', 'DATE_CREATED', 'DATE_MODIFIED']
+    list_display=("name", "description", "year", "start_date", "end_date", "is_active", "date_created", "date_modified", "author")
+    
+class CohorMemberAdmin(admin.ModelAdmin):
+    list_display=("cohort", "members", "is_active", "date_created", "date_modified")
 
-@admin.register(CohortMember)
-class CohortMemberAdmin(admin.ModelAdmin):
-    list_display = ['MEMBER', 'COHORT', 'IS_ACTIVE', 'DATE_CREATED', 'DATE_MODIFIED', 'AUTHOR']
+
+
+# admin.site.register(UserType, UserTypeAdmin)
+admin.site.register(IMUser, UserAdmin)
+admin.site.register(Cohort, CohortAdmin)
+admin.site.register(CohorMember, CohorMemberAdmin)
+

@@ -1,43 +1,51 @@
 from django.db import models
-from django.utils import timezone
+from django.contrib.auth.models import *
 
-class IMUser(models.Model):
-    FIRST_NAME = models.CharField(max_length=50)
-    LAST_NAME = models.CharField(max_length=50)
-    IS_ACTIVE = models.BooleanField(default=True)
-    USER_TYPE_CHOICES = [{'choice', 'SELECT USER'},
-        ('EIT', 'EIT'),
-        ('Teaching Fellow', 'TEACHING FELLOW'),
-        ('Admin Staff', 'ADMIN STAFF'),
-        ('Admin', 'ADMIN')
+# Create your models here.
+class IMUser(AbstractUser):
+    first_name = models.CharField(max_length=155, blank=True)
+    last_name = models.CharField(max_length=155, blank=True)
+    middle_name = models.CharField(max_length=155, blank=True)
+    phone_number = models.CharField(max_length=20, blank=True)
+
+    USER_TYPES = [
+        ('EIT', 'EiT'),
+        ('TEACHING_FELLOW', 'Teaching Fellow'),
+        ('ADMIN_STAFF', 'Administrative Staff'),
+        ('ADMIN', 'Administrator'),
     ]
-    USER_TYPE = models.CharField(max_length=50, choices=USER_TYPE_CHOICES)
-    DATE_CREATED = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"{self.FIRST_NAME} {self.LAST_NAME}"
-
+    user_type = models.CharField(max_length=20, choices=USER_TYPES, default='EIT')
+    date_created = models.DateTimeField(auto_now_add=True)
+    groups = models.ManyToManyField(Group, related_name='imuser_set')
+    user_permissions = models.ManyToManyField(Permission, related_name='imuser_set')
+    
+    def _str_(self):
+        return f"{self.first_name} {self.last_name}"
+    
 class Cohort(models.Model):
-    NAME = models.CharField(max_length=100)
-    DESCRIPTION = models.TextField()
-    YEAR = models.IntegerField()
-    START_DATE = models.DateField()
-    END_DATE = models.DateField()
-    IS_ACTIVE = models.BooleanField(default=True)
-    DATE_CREATED = models.DateTimeField(auto_now_add=True)
-    DATE_MODIFIED = models.DateTimeField(auto_now=True)
-    AUTHOR = models.ForeignKey(IMUser, on_delete=models.CASCADE)
-
+    name = models.CharField(max_length = 500, null = False)
+    description = models.TextField(max_length = 5000, blank = True)
+    year = models.IntegerField()
+    start_date = models.DateField(blank = True)
+    end_date = models.DateField(blank = True)
+    is_active = models.BooleanField(default=False)
+    date_created = models.DateTimeField(auto_now_add=True, blank =True, null = True)
+    date_modified = models.DateTimeField(auto_now=True, blank =True, null = True)
+    author = models.ForeignKey(IMUser, on_delete = models.CASCADE)
+    
     def __str__(self):
-        return self.NAME
+        return self.name
 
-class CohortMember(models.Model):
-    COHORT = models.ForeignKey(Cohort, on_delete=models.CASCADE)
-    MEMBER = models.ForeignKey(IMUser, on_delete=models.CASCADE, related_name='cohort_members')
-    IS_ACTIVE = models.BooleanField(default=True)
-    DATE_CREATED = models.DateTimeField(auto_now_add=True)
-    DATE_MODIFIED = models.DateTimeField(auto_now=True)
-    AUTHOR = models.ForeignKey(IMUser, on_delete=models.CASCADE, related_name='authored_cohort_members')
 
+class CohorMember(models.Model):
+    cohort = models.ForeignKey(Cohort, on_delete = models.CASCADE)
+    members = models.ForeignKey(IMUser, on_delete = models.CASCADE, related_name='cohort_members') 
+    is_active = models.BooleanField(default = False)
+    date_created = models.DateTimeField(auto_now_add = True)
+    date_modified = models.DateTimeField(auto_now = True)  
+    author = models.ForeignKey(IMUser, on_delete = models.CASCADE, related_name='authored_members')
+    
     def __str__(self):
-        return f"{self.MEMBER.FIRST_NAME} {self.MEMBER.LAST_NAME} - {self.COHORT.NAME}"
+        return f"(self.member.first_name) in (self.cohort.name)"
+    

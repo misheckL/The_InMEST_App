@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\HP\Documents\Mest_Training\in-mest_api\my_env
+set VIRTUAL_ENV=C:\Users\Administrator\Documents\python\inmest_api\my_env
 
 if not defined PROMPT set PROMPT=$P$G
 
